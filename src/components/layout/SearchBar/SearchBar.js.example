@@ -1,0 +1,108 @@
+export default {
+  props: {
+    options: Object
+  },
+  data() {
+    const filterFome = () => {
+      if (this.options.labelItems && Array.isArray(this.options.labelItems)) {
+        return this.options.labelItems.reduce((obj, item) => {
+          obj[item.prop] = null
+          return obj
+        }, {})
+      } else {
+        return {}
+      }
+    }
+    return {
+      searchForm: filterFome()
+    }
+  },
+  // 渲染函数
+  render(h) {
+    const components = this.options.labelItems || []
+    return h('el-form', {
+      props: {
+        inline: true,
+        model: this.searchForm,
+        size: 'mini'
+      }
+    }, components.map(({ prop, label, type, options = [] }) => {
+      if (!type) {
+        return h(
+          'el-form-item',
+          {
+            props: {
+              prop,
+              label
+            }
+          },
+          [h(
+            'el-input',
+            {
+              props: {
+                value: this.searchForm[prop]
+              },
+              on: {
+                input: value => {
+                  this.searchForm[prop] = value
+                }
+              }
+            }
+          )]
+        )
+      } else if (type === 'select') {
+        return h(
+          'el-form-item',
+          {
+            props: {
+              prop,
+              label
+            }
+          },
+          [h(
+            'el-select',
+            {
+              props: {
+                value: this.searchForm[prop]
+              },
+              on: {
+                input: value => {
+                  this.searchForm[prop] = value
+                }
+              }
+            },
+            options.map(props => {
+              return h('el-option', { props })
+            })
+          )]
+        )
+      }
+    }).concat([
+      // 生成buttoon
+      h('el-form-item',
+        [
+          h('el-button',
+            {
+              props: {
+                type: 'primary',
+                size: 'mini'
+              },
+              on: {
+                click: () => {
+                  this.onSearch()
+                }
+              }
+            },
+            '查询'
+          )
+        ]
+      )
+    ])
+    )
+  },
+  methods: {
+    onSearch() {
+      console.log(this.searchForm)
+    }
+  }
+}
