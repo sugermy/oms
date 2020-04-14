@@ -8,7 +8,7 @@ import qs from 'qs'
 
 const baseURL = window.SYSTEM_CONFIG.webServer // 基础服务地址
 export default class Ajax {
-  constructor (config = {
+  constructor(config = {
     baseURL,
     // baseURL:process.env.baseURL||process.env.apiUrl||""
     Token: '',
@@ -51,15 +51,6 @@ export default class Ajax {
       },
       url,
       data: qs.stringify(data),
-      params
-    })
-  }
-
-  put (url, data = {}, params = {}) {
-    return this._axios({
-      method: 'put',
-      url,
-      data,
       params
     })
   }

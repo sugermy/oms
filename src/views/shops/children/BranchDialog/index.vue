@@ -105,7 +105,7 @@ export default {
     },
     // 获取分店编号
     getShopCode () {
-      this.$ajax.put('/mer/shop').then(res => {
+      this.$ajax.get('/mer/shop').then(res => {
         this.form.ShopCode = res.Data
       })
     },
@@ -113,9 +113,9 @@ export default {
     initMenu () {
       this.$ajax.get(`/mer/shop/${this.id}`).then(res => {
         this.form = res.Data
-        if (this.id === 0) {
-          this.getShopCode()
-        }
+        // if (this.id === 0) {
+        //   this.getShopCode()
+        // }
       })
     },
     // 取消
