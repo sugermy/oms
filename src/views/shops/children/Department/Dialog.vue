@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑表单 -->
-  <el-dialog :title="id?'编辑终端':'新增终端'" :visible.sync="IsShowDialog" @close="cancel('editform')">
+  <el-dialog :title="id?'编辑部门':'新增部门'" :visible.sync="IsShowDialog" @close="cancel('editform')">
     <el-form :model="form" ref="editform" label-position="right" label-width="120px" :rules="rules">
       <el-row>
         <el-col :span="10">
