@@ -32,10 +32,9 @@
 </template>
 
 <script>
-import MenuDialog from './MenuDialog'
+import MenuDialog from './Dialog'
 
 export default {
-  name: 'Home',
   components: {
     MenuDialog
   },

@@ -4,16 +4,19 @@
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column prop="RoleName" label="模板名称">
+      <el-table-column type="index" label="序号" width="80">
       </el-table-column>
-      <el-table-column prop="Remark" label="职责描述">
+      <el-table-column prop="MenuName" label="所属菜单">
       </el-table-column>
-      <el-table-column prop="IsEnabled" label="是否启用">
-        <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
+      <el-table-column prop="ParentName" label="父级按钮">
       </el-table-column>
-      <el-table-column prop="UpdateUser" label="更新人">
+      <el-table-column prop="ButtonName" label="按钮名称">
       </el-table-column>
-      <el-table-column prop="UpdateDate" label="更新时间">
+      <el-table-column prop="FontCode" label="按钮图标">
+      </el-table-column>
+      <el-table-column prop="JsEvent" label="JS事件">
+      </el-table-column>
+      <el-table-column type="SortCode" label="排序号" width="100">
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
@@ -21,83 +24,90 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
-      layout="total, sizes, prev, pager, next, jumper" :total="params.total">
-    </el-pagination>
     <!-- 编辑弹窗 -->
-    <permissions-dialog ref="permissionsDialog" @confirm="confirmDialog" />
+    <button-dialog ref="menudialog" @confirm="confirmDialog" />
   </div>
 </template>
 
 <script>
-import PermissionsDialog from './PermissionsDialog'
 import TableHeight from '@/components/mixins/tableheight'
-
+import ButtonDialog from './Dialog'
 export default {
-  components: {
-    PermissionsDialog
-  },
   mixins: [TableHeight],
+  components: {
+    ButtonDialog
+  },
   data () {
     return {
       searchOptions: {
-        isDefinedSearch: true,
-        breadcrumb: { parent: '/oms/shops', name: '权限模板' },
-        labelWidth: '80px',
+        isDefinedSearch: false,
+        breadcrumb: { parent: '/oms/setting', name: '页面按钮' },
+        labelWidth: '100px',
         labelItems: [
           {
-            prop: 'RoleName',
-            label: '模板名称',
-            isShow: true
+            prop: 'menu_id',
+            label: '所属菜单ID',
+            type: 'select',
+            isShow: true,
+            options: []
           }
         ],
         buttonlist: {
           isReload: true,
           isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
+          isDelete: true
         }
       },
       loading: false,
+      tableHeight: 'auto',
       tableData: [],
       multipleSelection: [],
-      permissionsID: 0,
-      params: {
-        Page: 1,
-        Rows: 15,
-        total: 0
-      }
+      buttonid: 0
     }
   },
   created () {
+    this.getMenulist()
     this.initlist()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      // 获取元素高度
+      var h = document.documentElement.clientHeight || document.body.clientHeight
+      this.tableHeight = h - this.$refs.searchbar.$el.offsetHeight - 100
+    })
   },
   methods: {
     // 初始化列表
-    initlist (params, Page = this.params.Page, Rows = this.params.Rows) {
+    initlist (params) {
       this.loading = true
-      this.$ajax.get('/mer/role', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
+      this.$ajax.get('/admin/button', { ParamJson: JSON.stringify(params) }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
-        this.params.total = res.TotalCount
+      })
+    },
+    // 初始化获取所属菜单列表
+    getMenulist () {
+      this.$ajax.get('/admin/button/parent').then(res => {
+        if (res.Code === 200) {
+          this.searchOptions.labelItems[0].options = res.Data
+        }
       })
     },
     // 查询
     onSearch (v) {
-      this.params.Page = 1
       this.initlist(v)
     },
     // 新增操作
     addAction () {
-      this.permissionsID = 0
-      this.$refs.permissionsDialog.$emit('open', this.permissionsID)
+      this.buttonid = 0
+      this.$refs.menudialog.$emit('open', this.buttonid)
     },
     // 提交表单
     confirmDialog (form) {
-      this.$ajax.post('/mer/role', form).then(res => {
+      this.$ajax.post('/admin/button/submitInfo', form).then(res => {
         if (res.Code === 200) {
           this.$message({ type: 'success', message: '操作成功' })
-          this.$refs.permissionsDialog.$emit('hide')
+          this.$refs.menudialog.$emit('hide')
           this.initlist()
         } else {
           this.$message({ type: 'error', message: res.Content })
@@ -107,8 +117,8 @@ export default {
     // 启用停用
     updateAction (type) {
       if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/role/${type}`, { ids }).then(res => {
+        let ids = this.multipleSelection.map(el => el.ButtonID).join(',')
+        this.$ajax.patch(`/admin/button/${type}`, { ids }).then(res => {
           if (res.Code === 200) {
             this.$message({ type: 'success', message: '操作成功' })
             this.initlist()
@@ -126,18 +136,16 @@ export default {
     },
     // 编辑事件
     editAction (row) {
-      this.permissionsID = row.Id
-      this.$refs.permissionsDialog.$emit('open', this.permissionsID)
+      this.buttonid = row.ButtonID
+      this.$refs.menudialog.$emit('open', this.buttonid)
     },
     // 页码大小
     changeSize (val) {
-      this.params.Rows = val
-      this.initlist()
+      console.log(`每页 ${val} 条`)
     },
     // 页码跳转
     changeCurrent (val) {
-      this.params.Page = val
-      this.initlist()
+      console.log(`当前页: ${val}`)
     }
   }
 }

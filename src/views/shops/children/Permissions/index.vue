@@ -4,27 +4,16 @@
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column prop="ShopName" label="分店名称">
+      <el-table-column prop="RoleName" label="模板名称">
       </el-table-column>
-      <el-table-column prop="ShopCode" label="分店编码">
+      <el-table-column prop="Remark" label="职责描述">
       </el-table-column>
-      <el-table-column prop="IsEnabled" label="分店状态">
+      <el-table-column prop="IsEnabled" label="是否启用">
         <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
-      </el-table-column>
-      <el-table-column prop="IsFlagShip" label="是否是总店">
-        <template slot-scope="scope">{{scope.row.IsFlagShip?'是':'否'}}</template>
-      </el-table-column>
-      <el-table-column prop="Manager" label="负责人">
-      </el-table-column>
-      <el-table-column prop="Phone" label="联系电话">
-      </el-table-column>
-      <el-table-column prop="Address" label="分店地址">
       </el-table-column>
       <el-table-column prop="UpdateUser" label="更新人">
       </el-table-column>
       <el-table-column prop="UpdateDate" label="更新时间">
-      </el-table-column>
-      <el-table-column prop="Remark" label="备注">
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
@@ -36,39 +25,29 @@
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
-    <branch-dialog ref="branchDialog" @confirm="confirmDialog" />
+    <permissions-dialog ref="permissionsDialog" @confirm="confirmDialog" />
   </div>
 </template>
 
 <script>
-import BranchDialog from './BranchDialog'
+import PermissionsDialog from './Dialog'
 import TableHeight from '@/components/mixins/tableheight'
 
 export default {
   components: {
-    BranchDialog
+    PermissionsDialog
   },
   mixins: [TableHeight],
   data () {
     return {
       searchOptions: {
         isDefinedSearch: true,
-        breadcrumb: { parent: '/oms/shops', name: '分店管理' },
+        breadcrumb: { parent: '/oms/shops', name: '权限模板' },
         labelWidth: '80px',
         labelItems: [
           {
-            prop: 'ShopName',
-            label: '店铺名称',
-            isShow: true
-          },
-          {
-            prop: 'Manager',
-            label: '负责人',
-            isShow: true
-          },
-          {
-            prop: 'Phone',
-            label: '联系电话',
+            prop: 'RoleName',
+            label: '模板名称',
             isShow: true
           }
         ],
@@ -82,7 +61,7 @@ export default {
       loading: false,
       tableData: [],
       multipleSelection: [],
-      branchID: 0,
+      permissionsID: 0,
       params: {
         Page: 1,
         Rows: 15,
@@ -97,7 +76,7 @@ export default {
     // 初始化列表
     initlist (params, Page = this.params.Page, Rows = this.params.Rows) {
       this.loading = true
-      this.$ajax.get('/mer/shop', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
+      this.$ajax.get('/mer/role', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
         this.params.total = res.TotalCount
@@ -110,15 +89,15 @@ export default {
     },
     // 新增操作
     addAction () {
-      this.branchID = 0
-      this.$refs.branchDialog.$emit('open', this.branchID)
+      this.permissionsID = 0
+      this.$refs.permissionsDialog.$emit('open', this.permissionsID)
     },
     // 提交表单
     confirmDialog (form) {
-      this.$ajax.post('/mer/shop', form).then(res => {
+      this.$ajax.post('/mer/role', form).then(res => {
         if (res.Code === 200) {
           this.$message({ type: 'success', message: '操作成功' })
-          this.$refs.branchDialog.$emit('hide')
+          this.$refs.permissionsDialog.$emit('hide')
           this.initlist()
         } else {
           this.$message({ type: 'error', message: res.Content })
@@ -129,7 +108,7 @@ export default {
     updateAction (type) {
       if (this.multipleSelection.length > 0) {
         let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/shop/${type}`, { ids }).then(res => {
+        this.$ajax.patch(`/mer/pub/role/${type}`, { ids }).then(res => {
           if (res.Code === 200) {
             this.$message({ type: 'success', message: '操作成功' })
             this.initlist()
@@ -147,8 +126,8 @@ export default {
     },
     // 编辑事件
     editAction (row) {
-      this.branchID = row.Id
-      this.$refs.branchDialog.$emit('open', this.branchID)
+      this.permissionsID = row.Id
+      this.$refs.permissionsDialog.$emit('open', this.permissionsID)
     },
     // 页码大小
     changeSize (val) {

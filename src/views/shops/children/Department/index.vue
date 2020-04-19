@@ -6,13 +6,13 @@
       </el-table-column>
       <el-table-column prop="ShopName" label="所属门店">
       </el-table-column>
-      <el-table-column prop="TerminalNo" label="终端号">
+      <el-table-column prop="DepartmentName" label="部门名称">
       </el-table-column>
-      <el-table-column prop="IPAddress" label="IP地址">
+      <el-table-column prop="Manager" label="负责人">
       </el-table-column>
-      <el-table-column prop="Position" label="摆放位置">
+      <el-table-column prop="Phone" label="联系电话">
       </el-table-column>
-      <el-table-column prop="Remark" label="备注">
+      <el-table-column prop="Remark" label="职责描述">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="是否启用">
         <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
@@ -20,8 +20,6 @@
       <el-table-column prop="UpdateUser" label="更新人">
       </el-table-column>
       <el-table-column prop="UpdateDate" label="更新时间">
-      </el-table-column>
-      <el-table-column prop="Remark" label="备注">
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
@@ -33,24 +31,24 @@
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
-    <terminal-dialog ref="terminalDialog" @confirm="confirmDialog" />
+    <department-dialog ref="departmentDialog" @confirm="confirmDialog" />
   </div>
 </template>
 
 <script>
-import TerminalDialog from './TerminalDialog'
+import DepartmentDialog from './Dialog'
 import TableHeight from '@/components/mixins/tableheight'
 
 export default {
   components: {
-    TerminalDialog
+    DepartmentDialog
   },
   mixins: [TableHeight],
   data () {
     return {
       searchOptions: {
         isDefinedSearch: true,
-        breadcrumb: { parent: '/oms/shops', name: '终端管理' },
+        breadcrumb: { parent: '/oms/shops', name: '部门管理' },
         labelWidth: '80px',
         labelItems: [
           {
@@ -59,13 +57,13 @@ export default {
             isShow: true
           },
           {
-            prop: 'TerminalName',
-            label: '终端名称',
+            prop: 'Manager',
+            label: '负责人',
             isShow: true
           },
           {
-            prop: 'TerminalNo',
-            label: '终端编码',
+            prop: 'DepartmentName',
+            label: '部门名称',
             isShow: true
           }
         ],
@@ -79,7 +77,7 @@ export default {
       loading: false,
       tableData: [],
       multipleSelection: [],
-      terminalID: 0,
+      departmentID: 0,
       params: {
         Page: 1,
         Rows: 15,
@@ -94,7 +92,7 @@ export default {
     // 初始化列表
     initlist (params, Page = this.params.Page, Rows = this.params.Rows) {
       this.loading = true
-      this.$ajax.get('/mer/ter', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
+      this.$ajax.get('/mer/dep', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
         this.params.total = res.TotalCount
@@ -107,15 +105,15 @@ export default {
     },
     // 新增操作
     addAction () {
-      this.terminalID = 0
-      this.$refs.terminalDialog.$emit('open', this.terminalID)
+      this.departmentID = 0
+      this.$refs.departmentDialog.$emit('open', this.departmentID)
     },
     // 提交表单
     confirmDialog (form) {
-      this.$ajax.post('/mer/ter', form).then(res => {
+      this.$ajax.post('/mer/dep', form).then(res => {
         if (res.Code === 200) {
           this.$message({ type: 'success', message: '操作成功' })
-          this.$refs.terminalDialog.$emit('hide')
+          this.$refs.departmentDialog.$emit('hide')
           this.initlist()
         } else {
           this.$message({ type: 'error', message: res.Content })
@@ -126,7 +124,7 @@ export default {
     updateAction (type) {
       if (this.multipleSelection.length > 0) {
         let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/ter/${type}`, { ids }).then(res => {
+        this.$ajax.patch(`/mer/pub/dep/${type}`, { ids }).then(res => {
           if (res.Code === 200) {
             this.$message({ type: 'success', message: '操作成功' })
             this.initlist()
@@ -144,8 +142,8 @@ export default {
     },
     // 编辑事件
     editAction (row) {
-      this.terminalID = row.Id
-      this.$refs.terminalDialog.$emit('open', this.terminalID)
+      this.departmentID = row.Id
+      this.$refs.departmentDialog.$emit('open', this.departmentID)
     },
     // 页码大小
     changeSize (val) {

@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import StaffDialog from './StaffDialog'
+import StaffDialog from './Dialog'
 import TableHeight from '@/components/mixins/tableheight'
 
 export default {
