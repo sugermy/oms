@@ -9,8 +9,10 @@
       <el-table-column prop="ShopCode" label="分店编码">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="分店状态">
+        <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
       </el-table-column>
       <el-table-column prop="IsFlagShip" label="是否是总店">
+        <template slot-scope="scope">{{scope.row.IsFlagShip?'是':'否'}}</template>
       </el-table-column>
       <el-table-column prop="Manager" label="负责人">
       </el-table-column>
@@ -30,6 +32,9 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
+      layout="total, sizes, prev, pager, next, jumper" :total="params.total">
+    </el-pagination>
     <!-- 编辑弹窗 -->
     <branch-dialog ref="branchDialog" @confirm="confirmDialog" />
   </div>
@@ -37,12 +42,13 @@
 
 <script>
 import BranchDialog from './BranchDialog'
+import TableHeight from '@/components/mixins/tableheight'
 
 export default {
-  name: 'Home',
   components: {
     BranchDialog
   },
+  mixins: [TableHeight],
   data () {
     return {
       searchOptions: {
@@ -73,40 +79,39 @@ export default {
           isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
         }
       },
-      tableHeight: 'auto',
       loading: false,
       tableData: [],
       multipleSelection: [],
-      menuid: 0
+      branchID: 0,
+      params: {
+        Page: 1,
+        Rows: 15,
+        total: 0
+      }
     }
   },
   created () {
     this.initlist()
   },
-  mounted () {
-    this.$nextTick(() => {
-      // 获取元素高度
-      var h = document.documentElement.clientHeight || document.body.clientHeight
-      this.tableHeight = h - this.$refs.searchbar.$el.offsetHeight - 100
-    })
-  },
   methods: {
     // 初始化列表
-    initlist (params) {
+    initlist (params, Page = this.params.Page, Rows = this.params.Rows) {
       this.loading = true
-      this.$ajax.get('/mer/shop', params).then(res => {
+      this.$ajax.get('/mer/shop', { ...params, Page, Rows }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
+        this.params.total = res.TotalCount
       })
     },
     // 查询
     onSearch (v) {
+      this.params.Page = 1
       this.initlist(v)
     },
     // 新增操作
     addAction () {
-      this.menuid = 0
-      this.$refs.branchDialog.$emit('open', this.menuid)
+      this.branchID = 0
+      this.$refs.branchDialog.$emit('open', this.branchID)
     },
     // 提交表单
     confirmDialog (form) {
@@ -123,7 +128,7 @@ export default {
     // 启用停用
     updateAction (type) {
       if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.ID).join(',')
+        let ids = this.multipleSelection.map(el => el.Id).join(',')
         this.$ajax.patch(`/mer/pub/shop/${type}`, { ids }).then(res => {
           if (res.Code === 200) {
             this.$message({ type: 'success', message: '操作成功' })
@@ -142,16 +147,18 @@ export default {
     },
     // 编辑事件
     editAction (row) {
-      this.menuid = row.ID
-      this.$refs.branchDialog.$emit('open', this.menuid)
+      this.branchID = row.Id
+      this.$refs.branchDialog.$emit('open', this.branchID)
     },
     // 页码大小
     changeSize (val) {
-      console.log(`每页 ${val} 条`)
+      this.params.Rows = val
+      this.initlist()
     },
     // 页码跳转
     changeCurrent (val) {
-      console.log(`当前页: ${val}`)
+      this.params.Page = val
+      this.initlist()
     }
   }
 }

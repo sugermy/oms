@@ -1,40 +1,39 @@
 <template>
   <!-- 编辑表单 -->
-  <el-dialog :title="id?'编辑分店':'新增分店'" :visible.sync="IsShowDialog" @close="cancel('editform')">
+  <el-dialog :title="id?'编辑终端':'新增终端'" :visible.sync="IsShowDialog" @close="cancel('editform')">
     <el-form :model="form" ref="editform" label-position="right" label-width="120px" :rules="rules">
       <el-row>
         <el-col :span="10">
-          <el-form-item label="店铺名称" prop="ShopName">
-            <el-input v-model="form.ShopName" maxlength="20"></el-input>
+          <el-form-item label="所属分店" prop="ShopCode">
+            <el-select v-model="form.ShopCode" style="width:100%" placeholder="请选择所属分店">
+              <el-option :label="ShopName" :value="ShopCode" v-for="{ShopCode,ShopName} in shoplist" :key="ShopCode"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="店铺编号">
-            <el-input v-model="form.ShopCode" readonly>
-              <el-button type="primary" @click="getShopCode" slot="append">更换编号</el-button>
+          <el-form-item label="终端编号">
+            <el-input v-model="form.TerminalNo" readonly>
+              <el-button type="primary" @click="getTerminalCode" slot="append">更换编号</el-button>
             </el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="10">
-          <el-form-item label="店铺负责人" prop="Manager">
-            <el-input v-model="form.Manager" maxlength="20"></el-input>
+          <el-form-item label="终端名称" prop="TerminalName">
+            <el-input v-model="form.TerminalName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="联系电话" prop="Phone">
-            <el-input v-model="form.Phone" maxlength="11"></el-input>
+          <el-form-item label="摆放位置" prop="Position">
+            <el-input v-model="form.Position"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="10">
-          <el-form-item label="门店类型">
-            <el-radio-group v-model="form.IsFlagShip">
-              <el-radio :label="true">总店</el-radio>
-              <el-radio :label="false">分店</el-radio>
-            </el-radio-group>
+          <el-form-item label="IP地址" prop="IPAddress">
+            <el-input v-model="form.IPAddress" maxlength="11"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -43,13 +42,6 @@
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
             </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="20">
-          <el-form-item label="店铺地址" prop="Address">
-            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="form.Address" placeholder="请输入店铺地址（200字以内）"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,34 +68,27 @@ export default {
       id: null,
       form: {
         ID: 0,
-        ShopName: 1,
         ShopCode: '',
-        Manager: '',
-        Phone: '',
-        IsFlagShip: false,
+        TerminalNo: '',
+        TerminalName: '',
+        Position: '',
+        IPAddress: '',
         IsEnabled: true,
-        Address: '',
         Remark: ''
       },
+      shoplist: [],
       rules: {
-        ShopName: [
-          { required: true, message: '请输入店铺名称', trigger: 'blur' },
-          { min: 2, max: 20, message: '最大不超过20字符', trigger: 'blur' }
+        ShopCode: [
+          { required: true, message: '请选择所属门店', trigger: 'blur' }
         ],
-        Manager: [
-          { required: true, message: '请输入店铺负责人', trigger: 'blur' }
+        TerminalName: [
+          { required: true, message: '请输入终端名称', trigger: 'blur' }
         ],
-        Phone: [
-          { required: true, message: '请输入联系电话', trigger: 'blur' },
-          {
-            pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
-            message: '联系电话格式不正确',
-            trigger: 'blur'
-          }
+        IPAddress: [
+          { required: true, message: '请输入IP地址', trigger: 'blur' }
         ],
-        Address: [
-          { required: true, message: '请输入店铺地址', trigger: 'blur' },
-          { min: 2, max: 100, message: '最大不超过100字符', trigger: 'blur' }
+        Position: [
+          { required: true, message: '请输入摆放位置', trigger: 'blur' }
         ]
       }
     }
@@ -111,6 +96,7 @@ export default {
   mounted () {
     this.$on('open', (val) => {
       this.id = val
+      this.getShopList()
       this.openAction()
     })
     this.$on('hide', () => {
@@ -123,18 +109,24 @@ export default {
       this.IsShowDialog = true
       this.initMenu()
     },
-    // 获取分店编号
-    getShopCode () {
-      this.$ajax.get('/mer/shop/p/code').then(res => {
-        this.form.ShopCode = res.Data
+    // 获取终端编号
+    getTerminalCode () {
+      this.$ajax.get('/mer/ter/p').then(res => {
+        this.form.TerminalNo = res.Data
+      })
+    },
+    // 获取分店列表
+    getShopList () {
+      this.$ajax.get('/mer/pub/shop').then(res => {
+        this.shoplist = res.Data || []
       })
     },
     // 根据id
     initMenu () {
-      this.$ajax.get(`/mer/shop/${this.id}`).then(res => {
+      this.$ajax.get(`/mer/ter/${this.id}`).then(res => {
         this.form = res.Data
         if (this.id === 0) {
-          this.getShopCode()
+          this.getTerminalCode()
         }
       })
     },
