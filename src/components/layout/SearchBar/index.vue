@@ -43,7 +43,7 @@
         <!-- 默认类型 -->
         <template v-if="(!item.type||item.type==='input')&&item.isShow">
           <el-form-item :label="item.label" :key="index" :prop="item.prop">
-            <el-input v-model="searchform[item.prop]" :placeholder="`请输入${item.label}`"></el-input>
+            <el-input v-model.trim="searchform[item.prop]" :placeholder="`请输入${item.label}`"></el-input>
           </el-form-item>
         </template>
 
@@ -126,13 +126,13 @@ export default {
   methods: {
     onSearch () {
       // 查询触发父级事件
-      const newObj = Object.entries(this.searchform).reduce((obj, [k, v]) => {
+      const newObj = Object.entries(this.searchform).reduce((arr, [k, v]) => {
         if (Array.isArray(v)) {
           v = v.join(',')
         }
-        v && (obj[k] = v)
-        return obj
-      }, {})
+        v && (arr.push({ KeyName: k, KeyValue: v }))
+        return arr
+      }, [])
       this.$emit('query', newObj)
     },
     // 重置查询条件

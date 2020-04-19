@@ -163,7 +163,7 @@ export default {
     // 初始化列表
     initlist (params, Page = this.params.Page, Rows = this.params.Rows) {
       this.loading = true
-      this.$ajax.get('/mer/user', { ...params, Page, Rows }).then(res => {
+      this.$ajax.get('/mer/user', { ParamJson: JSON.stringify(params), Page, Rows }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
         this.params.total = res.TotalCount

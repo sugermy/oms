@@ -80,7 +80,7 @@ export default {
     // 初始化列表
     initlist (params) {
       this.loading = true
-      this.$ajax.get('/admin/menu', params).then(res => {
+      this.$ajax.get('/admin/menu', { ParamJson: JSON.stringify(params) }).then(res => {
         this.loading = false
         this.tableData = res.Data || []
       })
