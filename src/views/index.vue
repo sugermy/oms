@@ -161,7 +161,7 @@ export default {
         {
           path: '/oms/shops',
           label: '店铺管理',
-          icon: 'el-icon-s-shop',
+          icon: 'el-icon-takeaway-box',
           children: [
             {
               path: '/oms/shops/branch',
@@ -187,6 +187,38 @@ export default {
               path: '/oms/shops/permissions',
               label: '权限模板',
               icon: 'el-icon-s-management'
+            }
+          ]
+        },
+        {
+          path: '/oms/sells',
+          label: '售卖管理',
+          icon: 'el-icon-s-finance',
+          children: [
+            {
+              path: '/oms/sells/member',
+              label: '会员管理',
+              icon: 'el-icon-s-custom'
+            },
+            {
+              path: '/oms/sells/membercard',
+              label: '会员卡管理',
+              icon: 'el-icon-s-ticket'
+            },
+            {
+              path: '/oms/sells/goods',
+              label: '商品分类',
+              icon: 'el-icon-goods'
+            },
+            {
+              path: '/oms/sells/goodsstock',
+              label: '商品入库',
+              icon: 'el-icon-s-shop'
+            },
+            {
+              path: '/oms/sells/goodsputaway',
+              label: '商品上架',
+              icon: 'el-icon-s-promotion'
             }
           ]
         }

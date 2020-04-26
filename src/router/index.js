@@ -1,6 +1,7 @@
 // 导入路径视图
 import Settings from './settings'
 import Shops from './shops'
+import Sells from './sells'
 
 // 登录视图
 const Login = () => import('@/views/login')
@@ -29,6 +30,6 @@ export default [
         path: 'home',
         name: 'homepage',
         component: OmsHome
-      }, ...Settings, ...Shops]
+      }, ...Settings, ...Shops, ...Sells]
   }
 ]
