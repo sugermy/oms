@@ -23,7 +23,7 @@
         <!-- 操作按钮组start -->
         <el-button type="primary" v-if="attributes.buttonlist.isReload" icon="el-icon-refresh" @click="pageReload">刷新</el-button>
         <el-button type="primary" v-if="attributes.buttonlist.isNew" icon="el-icon-plus" @click="pageNew">新增</el-button>
-        <el-button type="primary" v-if="attributes.buttonlist.isDelete" icon="el-icon-delete" @click="pageDelete">删除</el-button>
+        <el-button type="primary" v-if="attributes.buttonlist.isDelete" icon="el-icon-delete" @click="pageUpdate(3)">删除</el-button>
         <el-dropdown v-if="attributes.buttonlist.isMore&&attributes.buttonlist.isMore.length>0">
           <el-button type="primary">
             更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -152,10 +152,6 @@ export default {
     // 新增项
     pageNew () {
       this.$emit('addnew')
-    },
-    // 批量删除
-    pageDelete () {
-      this.$emit('delete')
     },
     // 批量操作
     pageUpdate (v) {

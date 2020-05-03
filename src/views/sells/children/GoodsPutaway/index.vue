@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @delete="updateAction(3)" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
