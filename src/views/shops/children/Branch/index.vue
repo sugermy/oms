@@ -9,10 +9,10 @@
       <el-table-column prop="ShopCode" label="分店编码">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="分店状态">
-        <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
+        <template slot-scope="scope">{{scope.row.IsEnabled | TransformTemp('IsEnabled')}}</template>
       </el-table-column>
       <el-table-column prop="IsFlagShip" label="是否是总店">
-        <template slot-scope="scope">{{scope.row.IsFlagShip?'是':'否'}}</template>
+        <template slot-scope="scope">{{scope.row.IsFlagShip | TransformTemp('IsFlagShip')}}</template>
       </el-table-column>
       <el-table-column prop="Manager" label="负责人">
       </el-table-column>

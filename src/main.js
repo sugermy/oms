@@ -6,12 +6,18 @@ import './plugins/element.js'
 import './style/reset.less'
 import './style/element.less'
 import './style/public.less'
+
 // 百度图表
 import echarts from 'echarts'
+
 // router
 import ALLROUTERS from './router'
+
 // http
 import Ajax from './plugins/axios'
+
+// 过滤器
+import './plugins/filter'
 // 全局组件注册
 import SearchBar from './components/layout/SearchBar'
 Vue.component('search-bar', SearchBar)// 顶部查询框

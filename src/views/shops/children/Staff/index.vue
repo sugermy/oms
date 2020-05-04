@@ -15,10 +15,10 @@
       <el-table-column prop="Phone" label="Phone">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="是否启用">
-        <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
+        <template slot-scope="scope">{{scope.row.IsEnabled | TransformTemp('IsEnabled')}}</template>
       </el-table-column>
       <el-table-column prop="IsOnline" label="是否在线">
-        <template slot-scope="scope">{{scope.row.IsOnline?'在线':'离线'}}</template>
+        <template slot-scope="scope">{{scope.row.IsOnline | TransformTemp('IsOnline')}}</template>
       </el-table-column>
       <el-table-column prop="UpdateUser" label="更新人">
       </el-table-column>

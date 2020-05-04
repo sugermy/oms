@@ -17,6 +17,7 @@
       <el-table-column prop="LocationUrl" label="菜单地址">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="是否启用">
+        <template slot-scope="scope">{{scope.row.IsEnabled | TransformTemp('IsEnabled')}}</template>
       </el-table-column>
       <el-table-column prop="SortCode" label="排序号" width="100">
       </el-table-column>

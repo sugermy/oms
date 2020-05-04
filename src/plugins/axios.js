@@ -8,7 +8,7 @@ import qs from 'qs'
 
 const baseURL = window.SYSTEM_CONFIG.webServer // 基础服务地址
 export default class Ajax {
-  constructor(config = {
+  constructor (config = {
     baseURL,
     // baseURL:process.env.baseURL||process.env.apiUrl||""
     Token: '',

@@ -15,7 +15,7 @@
       <el-table-column prop="Remark" label="职责描述">
       </el-table-column>
       <el-table-column prop="IsEnabled" label="是否启用">
-        <template slot-scope="scope">{{scope.row.IsEnabled?'启用':'停用'}}</template>
+        <template slot-scope="scope">{{scope.row.IsEnabled | TransformTemp('IsEnabled')}}</template>
       </el-table-column>
       <el-table-column prop="UpdateUser" label="更新人">
       </el-table-column>
