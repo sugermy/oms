@@ -26,16 +26,18 @@
     </el-pagination>
     <!-- 编辑弹窗 -->
     <permissions-dialog ref="permissionsDialog" @confirm="confirmDialog" />
+    <allocate-dialog ref="allocateDialog" />
   </div>
 </template>
 
 <script>
 import PermissionsDialog from './Dialog'
+import AllocateDialog from './AllocateDialog'
 import TableHeight from '@/components/mixins/tableheight'
 
 export default {
   components: {
-    PermissionsDialog
+    PermissionsDialog, AllocateDialog
   },
   mixins: [TableHeight],
   data () {
@@ -55,7 +57,7 @@ export default {
           isReload: true,
           isNew: true,
           isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
+          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }, { label: '权限管理', type: 4 }]
         }
       },
       loading: false,
@@ -106,18 +108,22 @@ export default {
     },
     // 启用停用
     updateAction (type) {
-      if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/role/${type}`, { ids }).then(res => {
-          if (res.Code === 200) {
-            this.$message({ type: 'success', message: '操作成功' })
-            this.initlist()
-          } else {
-            this.$message({ type: 'error', message: res.Content })
-          }
-        })
+      if (type === 4) {
+        this.$refs.allocateDialog.$emit('open')
       } else {
-        this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        if (this.multipleSelection.length > 0) {
+          let ids = this.multipleSelection.map(el => el.Id).join(',')
+          this.$ajax.patch(`/mer/pub/role/${type}`, { ids }).then(res => {
+            if (res.Code === 200) {
+              this.$message({ type: 'success', message: '操作成功' })
+              this.initlist()
+            } else {
+              this.$message({ type: 'error', message: res.Content })
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        }
       }
     },
     // 选择行
