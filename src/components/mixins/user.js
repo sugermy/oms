@@ -3,7 +3,9 @@ import store from '@/store'
 
 export default {
   data () {
-    return {}
+    return {
+      menulist: []
+    }
   },
   created () {
     const Token = omsStorage.get('access_token')
@@ -20,6 +22,7 @@ export default {
       this.$ajax.get(`/login/${Token}`).then(res => {
         if (res.Code === 200) {
           store.dispatch('actionUser', res.Data)
+          this.menulist = res.Data.MenuList
         } else {
           this.$message({ type: 'error', message: res.Content })
         }

@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column prop="JsEvent" label="JS事件">
       </el-table-column>
-      <el-table-column type="SortCode" label="排序号" width="100">
+      <el-table-column prop="SortCode" label="排序号" width="100">
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">

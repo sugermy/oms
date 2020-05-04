@@ -19,22 +19,22 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="按钮名称">
-            <el-input v-model="form.ButtonName"></el-input>
+            <el-input v-model.trim="form.ButtonName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
           <el-form-item label="按钮图标">
-            <el-input v-model="form.FontCode"></el-input>
+            <el-input v-model.trim="form.FontCode"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
           <el-form-item label="JS事件">
-            <el-input v-model="form.JsEvent"></el-input>
+            <el-input v-model.trim="form.JsEvent"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
           <el-form-item label="排序号">
-            <el-input v-model="form.SortCode"></el-input>
+            <el-input v-model.trim="form.SortCode"></el-input>
           </el-form-item>
         </el-col>
       </el-row>

@@ -22,17 +22,17 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="菜单名称">
-            <el-input v-model="form.MenuName" maxlength="20"></el-input>
+            <el-input v-model.trim="form.MenuName" maxlength="20"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
           <el-form-item label="菜单图标">
-            <el-input v-model="form.Icon" maxlength="100"></el-input>
+            <el-input v-model.trim="form.Icon" maxlength="100"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
           <el-form-item label="排序号">
-            <el-input v-model="form.SortCode"></el-input>
+            <el-input v-model.trim="form.SortCode"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -45,7 +45,7 @@
         </el-col>
         <el-col :span="20">
           <el-form-item label="菜单地址">
-            <el-input v-model="form.LocationUrl"></el-input>
+            <el-input v-model.trim="form.LocationUrl"></el-input>
           </el-form-item>
         </el-col>
       </el-row>

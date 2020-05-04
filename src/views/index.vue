@@ -31,7 +31,7 @@
             <!-- 目录菜单循环s -->
             <template v-for="(directory,idx) in menulist">
               <!-- 存在多个子菜单 -->
-              <el-submenu v-if="directory.children" :key="idx" :index="directory.path">
+              <el-submenu v-if="directory.children&&directory.children.length>0" :key="idx" :index="directory.path">
                 <template slot="title">
                   <i :class="directory.icon"></i>
                   <span slot="title">{{directory.label}}</span>
@@ -124,110 +124,7 @@ export default {
       showSysForm: false, // 修改密码
       isCollapse: false, // 是否收起
       asideWidth: '160px', // 侧边栏宽度
-      // 目录菜单
-      menulist: [
-        {
-          path: '/oms/home',
-          label: '首页模板',
-          icon: 'el-icon-eleme'
-        },
-        {
-          path: '/oms/setting',
-          label: '系统管理',
-          icon: 'el-icon-setting',
-          children: [
-            {
-              path: '/oms/setting/sysmenu',
-              label: '系统菜单',
-              icon: 'el-icon-s-tools'
-            },
-            {
-              path: '/oms/setting/sysbutton',
-              label: '页面按钮',
-              icon: 'el-icon-s-help'
-            },
-            {
-              path: '/oms/setting/license',
-              label: '授权信息',
-              icon: 'el-icon-s-check'
-            },
-            {
-              path: '/oms/setting/history',
-              label: '历史数据',
-              icon: 'el-icon-s-flag'
-            },
-            {
-              path: '/oms/setting/printing',
-              label: '打印设置',
-              icon: 'el-icon-printer'
-            }
-          ]
-        },
-        {
-          path: '/oms/shops',
-          label: '店铺管理',
-          icon: 'el-icon-takeaway-box',
-          children: [
-            {
-              path: '/oms/shops/branch',
-              label: '分店管理',
-              icon: 'el-icon-s-opportunity'
-            },
-            {
-              path: '/oms/shops/terminal',
-              label: '终端管理',
-              icon: 'el-icon-s-platform'
-            },
-            {
-              path: '/oms/shops/department',
-              label: '部门管理',
-              icon: 'el-icon-trophy'
-            },
-            {
-              path: '/oms/shops/staff',
-              label: '员工管理',
-              icon: 'el-icon-user'
-            },
-            {
-              path: '/oms/shops/permissions',
-              label: '权限模板',
-              icon: 'el-icon-s-management'
-            }
-          ]
-        },
-        {
-          path: '/oms/sells',
-          label: '售卖管理',
-          icon: 'el-icon-s-finance',
-          children: [
-            {
-              path: '/oms/sells/member',
-              label: '会员管理',
-              icon: 'el-icon-s-custom'
-            },
-            {
-              path: '/oms/sells/membercard',
-              label: '会员卡管理',
-              icon: 'el-icon-s-ticket'
-            },
-            {
-              path: '/oms/sells/goods',
-              label: '商品分类',
-              icon: 'el-icon-goods'
-            },
-            {
-              path: '/oms/sells/goodsstock',
-              label: '商品入库',
-              icon: 'el-icon-s-shop'
-            },
-            {
-              path: '/oms/sells/goodsputaway',
-              label: '商品上架',
-              icon: 'el-icon-s-promotion'
-            }
-          ]
-        }
-      ],
+      // menulist 存在于mixin当中
       routertActive: '', // 默认激活菜单
       openActive: '', // 当前打开的菜单名称
       ruleForm: {
@@ -281,7 +178,6 @@ export default {
       this.$refs.menu.close(this.$store.state.openMenu.path)
     }
   },
-  created () { },
   methods: {
     // 展开收起菜单
     tabCollapse () {
