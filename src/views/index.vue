@@ -127,6 +127,11 @@ export default {
       // 目录菜单
       menulist: [
         {
+          path: '/oms/home',
+          label: '首页模板',
+          icon: 'el-icon-eleme'
+        },
+        {
           path: '/oms/setting',
           label: '系统管理',
           icon: 'el-icon-setting',
