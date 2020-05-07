@@ -19,7 +19,20 @@
           <el-button slot="reference">自定义查询</el-button>
         </el-popover>
         <!-- 自定义查询条件end -->
-
+        <!-- <div v-if="attributes.buttonlist.length>0">
+          <template v-for="(baseItem,index) in attributes.buttonlist">
+            <el-button :key="index" type="primary" v-if="baseItem.children.length<1" icon="el-icon-refresh" @click="pageUpdate(baseItem.JSEvent)">{{baseItem.ButtonName}}
+            </el-button>
+            <el-dropdown v-else :key="index">
+              <el-button type="primary">
+                更多<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(moreItem,index) in baseItem.children" :key="index" @click.native="pageUpdate(moreItem.JSEvent)">{{moreItem.ButtonName}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </div> -->
         <!-- 操作按钮组start -->
         <el-button type="primary" v-if="attributes.buttonlist.isReload" icon="el-icon-refresh" @click="pageReload">刷新</el-button>
         <el-button type="primary" v-if="attributes.buttonlist.isNew" icon="el-icon-plus" @click="pageNew">新增</el-button>
@@ -155,7 +168,8 @@ export default {
     },
     // 批量操作
     pageUpdate (v) {
-      this.$emit('update', v)
+      // this.$emit('update', v)
+      this.$emit('update', Number(v))
     },
     // 选择查询条件显示隐藏需要计算高度重新赋值表格高度
     reloadHeight () {
