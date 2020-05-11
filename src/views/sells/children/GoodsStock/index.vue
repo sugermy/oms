@@ -45,16 +45,18 @@
     </el-pagination>
     <!-- 编辑弹窗 -->
     <stock-dialog ref="stockDialog" @confirm="confirmDialog" />
+    <import-dialog ref="ImportDialog" />
   </div>
 </template>
 
 <script>
 import StockDialog from './Dialog'
+import ImportDialog from './ImportDialog'
 import TableHeight from '@/components/mixins/tableheight'
 
 export default {
   components: {
-    StockDialog
+    StockDialog, ImportDialog
   },
   mixins: [TableHeight],
   data () {
@@ -94,7 +96,7 @@ export default {
           isReload: true,
           isNew: true,
           isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
+          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }, { label: '批量录入', type: 3 }]
         }
       },
       loading: false,
@@ -143,20 +145,24 @@ export default {
         }
       })
     },
-    // 启用停用
+    // 多功能菜单
     updateAction (type) {
-      if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/user/${type}`, { ids }).then(res => {
-          if (res.Code === 200) {
-            this.$message({ type: 'success', message: '操作成功' })
-            this.initlist()
-          } else {
-            this.$message({ type: 'error', message: res.Content })
-          }
-        })
+      if (type === 3) {
+        this.$refs.ImportDialog.$emit('open')
       } else {
-        this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        if (this.multipleSelection.length > 0) {
+          let ids = this.multipleSelection.map(el => el.Id).join(',')
+          this.$ajax.patch(`/mer/pub/user/${type}`, { ids }).then(res => {
+            if (res.Code === 200) {
+              this.$message({ type: 'success', message: '操作成功' })
+              this.initlist()
+            } else {
+              this.$message({ type: 'error', message: res.Content })
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        }
       }
     },
     // 选择行

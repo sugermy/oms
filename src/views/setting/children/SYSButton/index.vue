@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column prop="FontCode" label="按钮图标">
       </el-table-column>
-      <el-table-column prop="JsEvent" label="JS事件">
+      <el-table-column prop="JsEvent" label="JS事件Code">
       </el-table-column>
       <el-table-column prop="SortCode" label="排序号" width="100">
       </el-table-column>

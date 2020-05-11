@@ -28,7 +28,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="JS事件">
+          <el-form-item label="JS事件Code">
             <el-input v-model.trim="form.JsEvent"></el-input>
           </el-form-item>
         </el-col>
