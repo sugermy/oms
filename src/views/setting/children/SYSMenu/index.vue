@@ -34,11 +34,12 @@
 
 <script>
 import MenuDialog from './Dialog'
-
+import SearchBtns from '@/components/mixins/searchbtn'
 export default {
   components: {
     MenuDialog
   },
+  mixins: [SearchBtns],
   data () {
     return {
       searchOptions: {
