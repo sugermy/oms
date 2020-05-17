@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="50">
       </el-table-column>
@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
+    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
@@ -53,12 +53,13 @@
 import StockDialog from './Dialog'
 import ImportDialog from './ImportDialog'
 import TableHeight from '@/components/mixins/tableheight'
+import SearchBtns from '@/components/mixins/searchbtn'
 
 export default {
   components: {
     StockDialog, ImportDialog
   },
-  mixins: [TableHeight],
+  mixins: [TableHeight, SearchBtns],
   data () {
     return {
       searchOptions: {
@@ -92,12 +93,7 @@ export default {
             isShow: true
           }
         ],
-        buttonlist: {
-          isReload: true,
-          isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }, { label: '批量录入', type: 3 }]
-        }
+        buttonlist: []
       },
       loading: false,
       tableData: [],
@@ -130,8 +126,7 @@ export default {
     },
     // 新增操作
     addAction () {
-      this.stockID = 0
-      this.$refs.stockDialog.$emit('open', this.stockID)
+
     },
     // 提交表单
     confirmDialog (form) {
@@ -145,9 +140,12 @@ export default {
         }
       })
     },
-    // 多功能菜单
+    // 0-新增 1-启用 2-停用 3-删除 5-导入
     updateAction (type) {
-      if (type === 3) {
+      if (type === 0) {
+        this.stockID = 0
+        this.$refs.stockDialog.$emit('open', this.stockID)
+      } else if (type === 5) {
         this.$refs.ImportDialog.$emit('open')
       } else {
         if (this.multipleSelection.length > 0) {

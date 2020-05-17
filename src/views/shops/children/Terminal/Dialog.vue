@@ -11,7 +11,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="终端编号">
+          <el-form-item label="终端编号" prop="TerminalNo">
             <el-input v-model="form.TerminalNo" readonly>
               <el-button type="primary" @click="getTerminalCode" slot="append">更换编号</el-button>
             </el-input>
@@ -37,7 +37,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="是否启用">
+          <el-form-item label="是否启用" prop="IsEnabled">
             <el-radio-group v-model="form.IsEnabled">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -47,7 +47,7 @@
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="备注">
+          <el-form-item label="备注" prop="Remark">
             <el-input type="textarea" :autosize="{ minRows: 2}" v-model="form.Remark" placeholder="请输入备注说明（200字以内）"></el-input>
           </el-form-item>
         </el-col>
@@ -100,7 +100,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

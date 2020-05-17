@@ -30,7 +30,7 @@
       </el-row>
       <el-row>
         <el-col :span="10">
-          <el-form-item label="是否启用">
+          <el-form-item label="是否启用" prop="IsEnabled">
             <el-radio-group v-model="form.IsEnabled">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -40,7 +40,7 @@
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="职位描述">
+          <el-form-item label="职位描述" prop="Remark">
             <el-input type="textarea" :autosize="{ minRows: 2}" v-model="form.Remark" placeholder="请输入职位描述说明（100字以内）"></el-input>
           </el-form-item>
         </el-col>
@@ -97,7 +97,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

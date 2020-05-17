@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -53,12 +53,7 @@ export default {
             isShow: true
           }
         ],
-        buttonlist: {
-          isReload: true,
-          isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
-        }
+        buttonlist: []
       },
       tableHeight: 'auto',
       loading: false,
@@ -74,7 +69,7 @@ export default {
     this.$nextTick(() => {
       // 获取元素高度
       var h = document.documentElement.clientHeight || document.body.clientHeight
-      this.tableHeight = h - this.$refs.searchbar.$el.offsetHeight - 100
+      this.tableHeight = h - this.$refs.searchbar.$el.offsetHeight - 120
     })
   },
   methods: {
@@ -90,11 +85,6 @@ export default {
     onSearch (v) {
       this.initlist(v)
     },
-    // 新增操作
-    addAction () {
-      this.menuid = 0
-      this.$refs.menudialog.$emit('open', this.menuid)
-    },
     // 提交表单
     confirmDialog (form) {
       delete form.ParentList
@@ -108,20 +98,25 @@ export default {
         }
       })
     },
-    // 启用停用
+    // 0-新增 1-启用 2-停用 3-删除
     updateAction (type) {
-      if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.ID).join(',')
-        this.$ajax.patch(`/admin/menu/${type}`, { ids }).then(res => {
-          if (res.Code === 200) {
-            this.$message({ type: 'success', message: '操作成功' })
-            this.initlist()
-          } else {
-            this.$message({ type: 'error', message: res.Content })
-          }
-        })
+      if (type === 0) {
+        this.menuid = 0
+        this.$refs.menudialog.$emit('open', this.menuid)
       } else {
-        this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        if (this.multipleSelection.length > 0) {
+          let ids = this.multipleSelection.map(el => el.ID).join(',')
+          this.$ajax.patch(`/admin/menu/${type}`, { ids }).then(res => {
+            if (res.Code === 200) {
+              this.$message({ type: 'success', message: '操作成功' })
+              this.initlist()
+            } else {
+              this.$message({ type: 'error', message: res.Content })
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        }
       }
     },
     // 选择行

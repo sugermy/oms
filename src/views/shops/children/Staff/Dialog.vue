@@ -44,7 +44,7 @@
       </el-row>
       <el-row>
         <el-col :span="10">
-          <el-form-item label="是否启用">
+          <el-form-item label="是否启用" prop="IsEnabled">
             <el-radio-group v-model="form.IsEnabled">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -120,7 +120,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

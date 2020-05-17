@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
+    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
@@ -34,12 +34,13 @@
 import PermissionsDialog from './Dialog'
 import AllocateDialog from './AllocateDialog'
 import TableHeight from '@/components/mixins/tableheight'
+import SearchBtns from '@/components/mixins/searchbtn'
 
 export default {
   components: {
     PermissionsDialog, AllocateDialog
   },
-  mixins: [TableHeight],
+  mixins: [TableHeight, SearchBtns],
   data () {
     return {
       searchOptions: {
@@ -53,12 +54,7 @@ export default {
             isShow: true
           }
         ],
-        buttonlist: {
-          isReload: true,
-          isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }, { label: '权限管理', type: 4 }]
-        }
+        buttonlist: []
       },
       loading: false,
       tableData: [],
@@ -89,11 +85,6 @@ export default {
       this.params.Page = 1
       this.initlist(v)
     },
-    // 新增操作
-    addAction () {
-      this.permissionsID = 0
-      this.$refs.permissionsDialog.$emit('open', this.permissionsID)
-    },
     // 提交表单
     confirmDialog (form) {
       this.$ajax.post('/mer/role', form).then(res => {
@@ -106,10 +97,17 @@ export default {
         }
       })
     },
-    // 启用停用
+    // 0-新增 1-启用 2-停用 3-删除 5-权限管理
     updateAction (type) {
-      if (type === 4) {
-        this.$refs.allocateDialog.$emit('open')
+      if (type === 0) {
+        this.permissionsID = 0
+        this.$refs.permissionsDialog.$emit('open', this.permissionsID)
+      } else if (type === 5) {
+        if (this.multipleSelection.length > 0) {
+          this.$refs.allocateDialog.$emit('open')
+        } else {
+          this.$message({ type: 'warning', message: '请选择对应的模板' })
+        }
       } else {
         if (this.multipleSelection.length > 0) {
           let ids = this.multipleSelection.map(el => el.Id).join(',')

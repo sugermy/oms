@@ -32,7 +32,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
+    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
@@ -43,12 +43,13 @@
 <script>
 import BranchDialog from './Dialog'
 import TableHeight from '@/components/mixins/tableheight'
+import SearchBtns from '@/components/mixins/searchbtn'
 
 export default {
   components: {
     BranchDialog
   },
-  mixins: [TableHeight],
+  mixins: [TableHeight, SearchBtns],
   data () {
     return {
       searchOptions: {
@@ -72,12 +73,7 @@ export default {
             isShow: true
           }
         ],
-        buttonlist: {
-          isReload: true,
-          isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
-        }
+        buttonlist: []
       },
       loading: false,
       tableData: [],

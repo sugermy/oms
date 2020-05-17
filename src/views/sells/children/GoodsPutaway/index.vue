@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]" :page-size="params.Page"
+    <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
     </el-pagination>
     <!-- 编辑弹窗 -->
@@ -40,12 +40,13 @@
 <script>
 import TerminalDialog from './Dialog'
 import TableHeight from '@/components/mixins/tableheight'
+import SearchBtns from '@/components/mixins/searchbtn'
 
 export default {
   components: {
     TerminalDialog
   },
-  mixins: [TableHeight],
+  mixins: [TableHeight, SearchBtns],
   data () {
     return {
       searchOptions: {
@@ -69,12 +70,7 @@ export default {
             isShow: true
           }
         ],
-        buttonlist: {
-          isReload: true,
-          isNew: true,
-          isDelete: true,
-          isMore: [{ label: '启用', type: 1 }, { label: '停用', type: 2 }]
-        }
+        buttonlist: []
       },
       loading: false,
       tableData: [],
@@ -122,20 +118,25 @@ export default {
         }
       })
     },
-    // 启用停用
+    // 0-新增 1-启用 2-停用 3-删除
     updateAction (type) {
-      if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/ter/${type}`, { ids }).then(res => {
-          if (res.Code === 200) {
-            this.$message({ type: 'success', message: '操作成功' })
-            this.initlist()
-          } else {
-            this.$message({ type: 'error', message: res.Content })
-          }
-        })
+      if (type === 0) {
+        this.terminalID = 0
+        this.$refs.terminalDialog.$emit('open', this.terminalID)
       } else {
-        this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        if (this.multipleSelection.length > 0) {
+          let ids = this.multipleSelection.map(el => el.Id).join(',')
+          this.$ajax.patch(`/mer/pub/ter/${type}`, { ids }).then(res => {
+            if (res.Code === 200) {
+              this.$message({ type: 'success', message: '操作成功' })
+              this.initlist()
+            } else {
+              this.$message({ type: 'error', message: res.Content })
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        }
       }
     },
     // 选择行

@@ -18,7 +18,7 @@
       </el-row>
       <el-row>
         <el-col :span="10">
-          <el-form-item label="分类类型">
+          <el-form-item label="分类类型" prop="CategoryType">
             <el-radio-group v-model="form.CategoryType" @change="changeType">
               <el-radio :label="1">产品分类</el-radio>
               <el-radio :label="2">产品类型</el-radio>
@@ -35,7 +35,7 @@
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="备注">
+          <el-form-item label="备注" prop="Remark">
             <el-input type="textarea" :autosize="{ minRows: 2}" v-model="form.Remark" placeholder="请输入备注说明（100字以内）"></el-input>
           </el-form-item>
         </el-col>
@@ -84,7 +84,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

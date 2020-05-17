@@ -4,7 +4,7 @@
     <el-form :model="form" ref="editform" label-position="right" label-width="120px">
       <el-row>
         <el-col :span="10">
-          <el-form-item label="菜单类型">
+          <el-form-item label="菜单类型" prop="Category">
             <el-radio-group v-model="form.Category">
               <el-radio :label="1">目录</el-radio>
               <el-radio :label="2">页面</el-radio>
@@ -12,7 +12,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10" v-show="form.Category!==1">
-          <el-form-item label="父级菜单">
+          <el-form-item label="父级菜单" prop="ParentID">
             <el-select v-model="form.ParentID" style="width:100%" placeholder="请选择父级菜单">
               <template v-for="(item,index) in form.ParentList">
                 <el-option v-show="form.Category!==1&&item.MenuID!==0" :key="index" :label="item.MenuName" :value="item.MenuID"></el-option>
@@ -21,22 +21,22 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="菜单名称">
+          <el-form-item label="菜单名称" prop="MenuName">
             <el-input v-model.trim="form.MenuName" maxlength="20"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="菜单图标">
+          <el-form-item label="菜单图标" prop="Icon">
             <el-input v-model.trim="form.Icon" maxlength="100"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="排序号">
+          <el-form-item label="排序号" prop="SortCode">
             <el-input v-model.trim="form.SortCode"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="是否启用">
+          <el-form-item label="是否启用" prop="IsEnabled">
             <el-radio-group v-model="form.IsEnabled">
               <el-radio :label="true">启用</el-radio>
               <el-radio :label="false">禁用</el-radio>
@@ -44,7 +44,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="20">
-          <el-form-item label="菜单地址">
+          <el-form-item label="菜单地址" prop="LocationUrl">
             <el-input v-model.trim="form.LocationUrl"></el-input>
           </el-form-item>
         </el-col>
@@ -82,7 +82,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

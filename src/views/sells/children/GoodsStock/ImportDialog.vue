@@ -1,8 +1,8 @@
 <template>
   <!-- 编辑表单 -->
-  <el-dialog title="批量导入产品" :visible.sync="IsShowDialog" @close="cancel" width="70%">
-    <el-form inline :model="formInline">
-      <el-form-item label="所属分店">
+  <el-dialog title="批量导入产品" :visible.sync="IsShowDialog" @close="cancel('editform')" width="70%">
+    <el-form inline :model="formInline" ref="editform">
+      <el-form-item label="所属分店" prop="region">
         <el-select v-model="formInline.region" placeholder="请选择所属分店">
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
@@ -53,7 +53,7 @@ export default {
       this.IsShowDialog = true
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {
@@ -67,8 +67,9 @@ export default {
 
     },
     // 取消
-    cancel () {
+    cancel (formName) {
       this.IsShowDialog = false
+      this.$refs[formName].resetFields()
     },
     // 提交
     confirm () {

@@ -70,7 +70,7 @@
         </el-row>
         <el-row>
           <el-col :span="20">
-            <el-form-item label="备注">
+            <el-form-item label="备注" prop="Remark">
               <el-input type="textarea" :autosize="{ minRows: 2}" v-model="form.Remark" placeholder="请输入备注说明（200字以内）"></el-input>
             </el-form-item>
           </el-col>
@@ -80,7 +80,7 @@
       <el-row v-show="activeType==='2'">
         <el-row>
           <el-col :span="10">
-            <el-form-item label="是否启用">
+            <el-form-item label="是否启用" prop="Stock_Start">
               <el-radio-group v-model="form.Stock_Start">
                 <el-radio :label="true">是</el-radio>
                 <el-radio :label="false">否</el-radio>
@@ -100,7 +100,7 @@
       <el-row v-show="activeType==='3'">
         <el-row>
           <el-col :span="10">
-            <el-form-item label="是否开启">
+            <el-form-item label="是否开启" prop="Commision_Start">
               <el-radio-group v-model="form.Commision_Start">
                 <el-radio :label="true">开启</el-radio>
                 <el-radio :label="false">无提成</el-radio>
@@ -125,7 +125,7 @@
       <el-row v-show="activeType==='4'">
         <el-row>
           <el-col :span="10">
-            <el-form-item label="积分赠送">
+            <el-form-item label="积分赠送" prop="Integral_gift_abled">
               <el-radio-group v-model="form.Integral_gift_abled">
                 <el-radio :label="true">开启</el-radio>
                 <el-radio :label="false">无积分</el-radio>
@@ -147,7 +147,7 @@
         </el-row>
         <el-row>
           <el-col :span="10">
-            <el-form-item label="积分兑换">
+            <el-form-item label="积分兑换" prop="Integral_exchange_abled">
               <el-radio-group v-model="form.Integral_exchange_abled">
                 <el-radio :label="true">允许</el-radio>
                 <el-radio :label="false">不允许</el-radio>
@@ -164,7 +164,7 @@
         </el-row>
         <el-row v-show="form.Integral_exchange_abled">
           <el-col :span="10">
-            <el-form-item label="兑换限制">
+            <el-form-item label="兑换限制" prop="Integral_exchange_limit">
               <el-radio-group v-model="form.Integral_exchange_limit">
                 <el-radio :label="true">允许</el-radio>
                 <el-radio :label="false">不允许</el-radio>
@@ -174,7 +174,7 @@
         </el-row>
         <el-row v-show="form.Integral_exchange_abled&&form.Integral_exchange_limit">
           <el-col :span="10">
-            <el-form-item label="时间区间">
+            <el-form-item label="时间区间" prop="jtimes">
               <el-date-picker v-model="form.jtimes" type="daterange" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :editable="false" range-separator="-" start-placeholder="开始日期"
                 end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
@@ -185,7 +185,7 @@
       <el-row v-show="activeType==='5'">
         <el-row>
           <el-col :span="10">
-            <el-form-item label="打折优惠">
+            <el-form-item label="打折优惠" prop="Discount_Start">
               <el-radio-group v-model="form.Discount_Start">
                 <el-radio :label="true">开启</el-radio>
                 <el-radio :label="false">无折扣</el-radio>
@@ -252,7 +252,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {

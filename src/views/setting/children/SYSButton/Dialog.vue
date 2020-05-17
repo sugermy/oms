@@ -4,36 +4,36 @@
     <el-form :model="form" label-position="right" ref="editform" label-width="120px">
       <el-row>
         <el-col :span="10">
-          <el-form-item label="所属菜单">
+          <el-form-item label="所属菜单" prop="MenuID">
             <el-select v-model="form.MenuID" style="width:100%" placeholder="请选择所属菜单" @change="menuChange">
               <el-option v-for="(item,index) in memulist" :key="index" :label="item.MenuName" :value="item.MenuID"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
-          <el-form-item label="父级按钮">
+          <el-form-item label="父级按钮" prop="ParentID">
             <el-select v-model="form.ParentID" style="width:100%" placeholder="请选择父级按钮">
               <el-option v-for="(item,index) in btnlist" :key="index" :label="item.ButtonName" :value="item.ButtonID"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="按钮名称">
+          <el-form-item label="按钮名称" prop="ButtonName">
             <el-input v-model.trim="form.ButtonName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
-          <el-form-item label="按钮图标">
+          <el-form-item label="按钮图标" prop="FontCode">
             <el-input v-model.trim="form.FontCode"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="JS事件Code">
+          <el-form-item label="JS事件Code" prop="JsEvent">
             <el-input v-model.trim="form.JsEvent"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
-          <el-form-item label="排序号">
+          <el-form-item label="排序号" prop="SortCode">
             <el-input v-model.trim="form.SortCode"></el-input>
           </el-form-item>
         </el-col>
@@ -72,7 +72,7 @@ export default {
       this.openAction()
     })
     this.$on('hide', () => {
-      this.IsShowDialog = false
+      this.cancel('editform')
     })
   },
   methods: {
