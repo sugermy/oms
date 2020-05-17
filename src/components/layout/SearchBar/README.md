@@ -34,24 +34,15 @@
                           isShow: false
                         }
                       }
-按钮集合  >>>    buttonlist: 
-                  {
-                    isReload: true,//是否显示刷新按钮
-                    isNew: true,//是否显示新增按钮
-                    isDelete: true,//是否显示删除按钮
-                    isMore:[]//是否显示更多操作列
-                  }
+按钮集合  >>>    buttonlist: [] // 接口返回赋值
 ```
 
 ### @query='xxx'
 ```
 查询事件---在引入组件内声明事件调用
+
 ```
-### @addnew='xxx'
+### @pageUpdate='xxx'
 ```
-新增事件---在引入组件内声明事件调用
-```
-### @delete='xxx'
-```
-删除事件---在引入组件内声明事件调用
+更新事件---在引入组件内声明事件调用---根据code执行对应的业务
 ```
