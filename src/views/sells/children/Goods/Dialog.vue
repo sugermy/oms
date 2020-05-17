@@ -25,7 +25,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="10" v-if="form.CategoryType===2">
           <el-form-item label="父级分类" prop="ParentCode">
             <el-select v-model="form.ParentCode" style="width:100%" placeholder="请选择父级分类" @change="changeCode">
               <el-option :label="CategoryName" :value="CategoryCode" v-for="{CategoryCode,CategoryName} in categoryList" :key="CategoryCode"></el-option>
