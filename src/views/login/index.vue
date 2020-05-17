@@ -5,9 +5,14 @@
       <h3 class="sys-compony">贺米粒科技</h3>
       <p class="sys-name">会员管理系统</p>
       <el-form ref="form" :model="form" class="login-form" hide-required-asterisk>
+        <el-form-item prop="ShopCode" :rules="{ required: true, message: '请选择门店'}">
+          <el-select v-model="form.ShopCode" style="width:100%" placeholder="请选择门店" @change="changeCode">
+            <el-option v-for="(item,index) in shoplist" :key="index" :label="item.ShopName" :value="item.ShopCode"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item prop="TerminalNo" :rules="{ required: true, message: '请选择终端'}">
-          <el-select v-model="form.TerminalNo" style="width:100%">
-            <el-option label="店铺名称-终端名称" value="1"></el-option>
+          <el-select v-model="form.TerminalNo" placeholder="请选择终端" style="width:100%">
+            <el-option v-for="(item,index) in terminallist" :key="index" :label="item.TerminalName" :value="item.TerminalNo"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="Account" :rules="{ required: true, message: '请输入帐号'}">
@@ -35,8 +40,10 @@ export default {
   data () {
     return {
       roleType: false,
+      shoplist: [],
+      terminallist: [],
       form: {
-        TerminalNo: '1',
+        TerminalNo: '',
         Account: '',
         Password: ''
       }
@@ -49,8 +56,14 @@ export default {
     // 获取当前系统所有的分店
     getshops () {
       this.$ajax.get('/login/shop').then(res => {
-        // console.log(res)
+        this.shoplist = res.Data
       })
+    },
+    // 切换门店
+    changeCode (code) {
+      this.form.TerminalNo = ''
+      let terminalParent = this.shoplist.filter(el => el.ShopCode === code)[0] || []
+      this.terminallist = terminalParent.TerminalList || []
     },
     // 切换状态
     changeRole (v) {
@@ -71,7 +84,7 @@ export default {
           if (this.roleType) {
             this.superlogin(data)
           } else {
-            this.precheck(data)
+            this.precheck()
           }
         } else {
           return false
@@ -79,16 +92,34 @@ export default {
       })
     },
     // 普通用户验证
-    precheck (data) {
+    precheck () {
       this.$ajax.get(`/login/precheck/$${this.form.Account}`).then(res => {
         if (res.Code === 200) {
-
+          this.baselogin()
         } else {
           this.$message({ type: 'error', message: res.Content })
         }
       })
     },
     // 普通用户登录
+    baselogin () {
+      let params = {
+        ...this.form,
+        auth_token: randomName()
+      }
+      this.$ajax.post('/login', params).then(res => {
+        if (res.Code === 200) {
+          this.$message({ type: 'success', message: '登陆成功' })
+          // let date = new Date().getTime()
+          // omsStorage.set('access_token', res.Data.Token, date + 12 * 60 * 60 * 1000)
+          // this.$nextTick(() => {
+          //   this.$router.push('/oms')
+          // })
+        } else {
+          this.$message({ type: 'error', message: res.Content })
+        }
+      })
+    },
     // 超级管理员
     superlogin (data) {
       this.$ajax.post('/login/super', data).then(res => {
