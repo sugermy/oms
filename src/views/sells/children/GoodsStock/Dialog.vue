@@ -21,7 +21,7 @@
           </el-col>
           <el-col :span="10">
             <el-form-item label="产品类型" prop="ProductCategory">
-              <el-select v-model="form.ProductCategory" style="width:100%" placeholder="请选择所属分店" @change="changeCode">
+              <el-select v-model="form.ProductCategory" style="width:100%" placeholder="请选择所属分店">
                 <el-option label="香烟" value="香烟"></el-option>
               </el-select>
             </el-form-item>
@@ -42,7 +42,7 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="商品条码" prop="CodeType">
-              <el-select v-model="form.CodeType" style="width:100%" placeholder="请选择生成商品条码类型" @change="changeCode">
+              <el-select v-model="form.CodeType" style="width:100%" placeholder="请选择生成商品条码类型">
                 <el-option label="系统生成" :value="false"></el-option>
                 <el-option label="手动输入" :value="true"></el-option>
               </el-select>
@@ -279,6 +279,15 @@ export default {
     },
     // 分店下拉改变
     changeCode (code) {
+      this.getProductType(code)
+      let shopOne = this.shoplist.filter(el => el.ShopCode === code)[0]
+      this.form.ShopName = shopOne.ShopName
+    },
+    // 根据分店获取产品类型
+    getProductType (code) {
+      this.$ajax.get(`/pro/pub/type/${code}`).then(res => {
+        console.log(res)
+      })
     },
     // 根据id
     initMenu () {

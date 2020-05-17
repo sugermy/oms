@@ -17,10 +17,12 @@
           <el-input v-model="form.Password" placeholder="请输入密码" @keypress.enter.native="login('form')"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width:100%" round @click="login('form')">我是管理员</el-button>
+          <!-- <el-button type="primary" style="width:100%" round @click="login('form')">我是管理员</el-button> -->
+          <el-switch v-model="roleType" active-text="管理员登陆" inactive-text="普通登陆" @change="changeRole">
+          </el-switch>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width:100%" round>登录</el-button>
+          <el-button type="primary" style="width:100%" round @click="login('form')">登录</el-button>
         </el-form-item>
       </el-form>
     </el-main>
@@ -32,6 +34,7 @@ import { randomName, omsStorage } from '../../plugins/utils'
 export default {
   data () {
     return {
+      roleType: false,
       form: {
         TerminalNo: '1',
         Account: '',
@@ -49,6 +52,14 @@ export default {
         // console.log(res)
       })
     },
+    // 切换状态
+    changeRole (v) {
+      if (v) {
+        this.$message({ type: 'success', message: '状态已切换为管理员登录' })
+      } else {
+        this.$message({ type: 'success', message: '状态已切换为普通用户登录' })
+      }
+    },
     // 登陆接口---根据所选终端判断
     login (formName) {
       this.$refs[formName].validate((valid) => {
@@ -57,12 +68,27 @@ export default {
           let data = {
             Account, Password, auth_token: randomName()
           }
-          this.superlogin(data)
+          if (this.roleType) {
+            this.superlogin(data)
+          } else {
+            this.precheck(data)
+          }
         } else {
           return false
         }
       })
     },
+    // 普通用户验证
+    precheck (data) {
+      this.$ajax.get(`/login/precheck/$${this.form.Account}`).then(res => {
+        if (res.Code === 200) {
+
+        } else {
+          this.$message({ type: 'error', message: res.Content })
+        }
+      })
+    },
+    // 普通用户登录
     // 超级管理员
     superlogin (data) {
       this.$ajax.post('/login/super', data).then(res => {

@@ -1,6 +1,6 @@
 <template>
   <div class="home" v-loading.fullscreen.lock="loading">
-    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @addnew="addAction" @update="updateAction" />
+    <search-bar ref="searchbar" :attributes="searchOptions" @query="onSearch" @update="updateAction" />
     <el-table :data="tableData" border style="width: 100%" :height="tableHeight" @selection-change="selectChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -104,11 +104,6 @@ export default {
       this.params.Page = 1
       this.initlist(v)
     },
-    // 新增操作
-    addAction () {
-      this.branchID = 0
-      this.$refs.branchDialog.$emit('open', this.branchID)
-    },
     // 提交表单
     confirmDialog (form) {
       this.$ajax.post('/mer/shop', form).then(res => {
@@ -121,20 +116,25 @@ export default {
         }
       })
     },
-    // 启用停用
+    // 0-新增 1-启用 2-停用 3-删除
     updateAction (type) {
-      if (this.multipleSelection.length > 0) {
-        let ids = this.multipleSelection.map(el => el.Id).join(',')
-        this.$ajax.patch(`/mer/pub/shop/${type}`, { ids }).then(res => {
-          if (res.Code === 200) {
-            this.$message({ type: 'success', message: '操作成功' })
-            this.initlist()
-          } else {
-            this.$message({ type: 'error', message: res.Content })
-          }
-        })
+      if (type === 0) {
+        this.branchID = 0
+        this.$refs.branchDialog.$emit('open', this.branchID)
       } else {
-        this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        if (this.multipleSelection.length > 0) {
+          let ids = this.multipleSelection.map(el => el.Id).join(',')
+          this.$ajax.patch(`/mer/pub/shop/${type}`, { ids }).then(res => {
+            if (res.Code === 200) {
+              this.$message({ type: 'success', message: '操作成功' })
+              this.initlist()
+            } else {
+              this.$message({ type: 'error', message: res.Content })
+            }
+          })
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的数据行' })
+        }
       }
     },
     // 选择行

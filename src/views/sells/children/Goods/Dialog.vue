@@ -28,7 +28,7 @@
         <el-col :span="10">
           <el-form-item label="父级分类" prop="ParentCode">
             <el-select v-model="form.ParentCode" style="width:100%" placeholder="请选择父级分类" @change="changeCode">
-              <el-option :label="ParentName" :value="CategoryCode" v-for="{CategoryCode,ParentName} in categoryList" :key="CategoryCode"></el-option>
+              <el-option :label="CategoryName" :value="CategoryCode" v-for="{CategoryCode,CategoryName} in categoryList" :key="CategoryCode"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -118,6 +118,9 @@ export default {
     initMenu () {
       this.$ajax.get(`/pro/type/${this.id}`).then(res => {
         this.form = res.Data
+        if (this.id !== 0) {
+          this.getCategoryList(this.form.ShopCode)
+        }
       })
     },
     // 取消
