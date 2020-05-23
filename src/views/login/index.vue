@@ -5,12 +5,12 @@
       <h3 class="sys-compony">贺米粒科技</h3>
       <p class="sys-name">会员管理系统</p>
       <el-form ref="form" :model="form" class="login-form" hide-required-asterisk>
-        <el-form-item prop="ShopCode" :rules="{ required: true, message: '请选择门店'}">
+        <el-form-item v-if="!roleType" prop="ShopCode" :rules="{ required: true, message: '请选择门店'}">
           <el-select v-model="form.ShopCode" style="width:100%" placeholder="请选择门店" @change="changeCode">
             <el-option v-for="(item,index) in shoplist" :key="index" :label="item.ShopName" :value="item.ShopCode"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="TerminalNo" :rules="{ required: true, message: '请选择终端'}">
+        <el-form-item v-if="!roleType" prop="TerminalNo" :rules="{ required: true, message: '请选择终端'}">
           <el-select v-model="form.TerminalNo" placeholder="请选择终端" style="width:100%">
             <el-option v-for="(item,index) in terminallist" :key="index" :label="item.TerminalName" :value="item.TerminalNo"></el-option>
           </el-select>

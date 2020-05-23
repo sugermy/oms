@@ -98,7 +98,7 @@ export default {
         }
       })
     },
-    // 0-新增 1-启用 2-停用 3-删除
+    // 0-新增 1-启用 2-停用 3-删除 4-更多
     updateAction (type) {
       if (type === 0) {
         this.menuid = 0
