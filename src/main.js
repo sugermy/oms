@@ -2,10 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from 'vue-router'
 import store from './store'
-import './plugins/element.js'
-import './style/reset.less'
-import './style/element.less'
-import './style/public.less'
+import './plugins' // 插件-方法
+import './style' // 样式
 
 // 百度图表
 import echarts from 'echarts'
@@ -16,8 +14,6 @@ import ALLROUTERS from './router'
 // http
 import Ajax from './plugins/axios'
 
-// 过滤器
-import './plugins/filter'
 // 全局组件注册
 import SearchBar from './components/layout/SearchBar'
 Vue.component('search-bar', SearchBar)// 顶部查询框

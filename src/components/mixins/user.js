@@ -1,4 +1,3 @@
-import { omsStorage } from '../../plugins/utils'
 import store from '@/store'
 
 export default {
@@ -8,7 +7,7 @@ export default {
     }
   },
   created () {
-    const Token = omsStorage.get('access_token')
+    const Token = this.$storage.get('access_token')
     if (Token) {
       this.$ajax._axios.defaults.headers.auth_token = Token
       this.initUserInfo(Token)

@@ -35,7 +35,6 @@
   </el-container>
 </template>
 <script>
-import { randomName, omsStorage } from '../../plugins/utils'
 export default {
   data () {
     return {
@@ -79,7 +78,7 @@ export default {
         if (valid) {
           let { Account, Password } = this.form
           let data = {
-            Account, Password, auth_token: randomName()
+            Account, Password, auth_token: this.$random()
           }
           if (this.roleType) {
             this.superlogin(data)
@@ -105,13 +104,13 @@ export default {
     baselogin () {
       let params = {
         ...this.form,
-        auth_token: randomName()
+        auth_token: this.$random()
       }
       this.$ajax.post('/login', params).then(res => {
         if (res.Code === 200) {
           this.$message({ type: 'success', message: '登陆成功' })
           // let date = new Date().getTime()
-          // omsStorage.set('access_token', res.Data.Token, date + 12 * 60 * 60 * 1000)
+          // this.$storage.set('access_token', res.Data.Token, date + 12 * 60 * 60 * 1000)
           // this.$nextTick(() => {
           //   this.$router.push('/oms')
           // })
@@ -126,7 +125,7 @@ export default {
         if (res.Code === 200) {
           this.$message({ type: 'success', message: '登陆成功' })
           let date = new Date().getTime()
-          omsStorage.set('access_token', res.Data.Token, date + 12 * 60 * 60 * 1000)
+          this.$storage.set('access_token', res.Data.Token, date + 12 * 60 * 60 * 1000)
           this.$nextTick(() => {
             this.$router.push('/oms')
           })

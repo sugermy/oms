@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 // 32位随机数
 const randomName = function () {
   var s = []
@@ -31,7 +33,5 @@ const omsStorage = {
     window.localStorage.removeItem(key)
   }
 }
-
-export {
-  randomName, omsStorage
-}
+Vue.prototype.$random = randomName
+Vue.prototype.$storage = omsStorage
