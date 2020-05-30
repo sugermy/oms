@@ -15,11 +15,6 @@
       </el-table-column>
       <el-table-column prop="UpdateDate" label="更新时间">
       </el-table-column>
-      <el-table-column label="操作" width="100" align="center">
-        <template slot-scope="scope">
-          <el-button type="text" @click="editAction(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <el-pagination class="page-current" background @size-change="changeSize" @current-change="changeCurrent" :page-sizes="[15, 30, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper" :total="params.total">
@@ -107,6 +102,12 @@ export default {
           this.$refs.allocateDialog.$emit('open')
         } else {
           this.$message({ type: 'warning', message: '请选择对应的模板' })
+        }
+      } else if (type === 8) {
+        if (this.multipleSelection.length === 1) {
+          this.editAction(this.multipleSelection[0])
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的1条数据' })
         }
       } else {
         if (this.multipleSelection.length > 0) {

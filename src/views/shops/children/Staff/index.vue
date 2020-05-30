@@ -28,7 +28,6 @@
       </el-table-column>
       <el-table-column label="操作" width="140" align="center">
         <template slot-scope="scope">
-          <el-button type="text" @click="editAction(scope.row)">编辑</el-button>
           <el-button type="text" @click="passAction(scope.row)">修改密码</el-button>
         </template>
       </el-table-column>
@@ -187,6 +186,12 @@ export default {
       if (type === 0) {
         this.staffID = 0
         this.$refs.staffDialog.$emit('open', this.staffID)
+      } else if (type === 8) {
+        if (this.multipleSelection.length === 1) {
+          this.editAction(this.multipleSelection[0])
+        } else {
+          this.$message({ type: 'warning', message: '请选择要操作的1条数据' })
+        }
       } else {
         if (this.multipleSelection.length > 0) {
           let ids = this.multipleSelection.map(el => el.Id).join(',')
